@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "静态链表", "静态链表.vcxproj", "{2E4167A4-14AE-4081-8EB8-68564E88A524}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2E4167A4-14AE-4081-8EB8-68564E88A524}.Debug|x64.ActiveCfg = Debug|x64
+		{2E4167A4-14AE-4081-8EB8-68564E88A524}.Debug|x64.Build.0 = Debug|x64
+		{2E4167A4-14AE-4081-8EB8-68564E88A524}.Debug|x86.ActiveCfg = Debug|Win32
+		{2E4167A4-14AE-4081-8EB8-68564E88A524}.Debug|x86.Build.0 = Debug|Win32
+		{2E4167A4-14AE-4081-8EB8-68564E88A524}.Release|x64.ActiveCfg = Release|x64
+		{2E4167A4-14AE-4081-8EB8-68564E88A524}.Release|x64.Build.0 = Release|x64
+		{2E4167A4-14AE-4081-8EB8-68564E88A524}.Release|x86.ActiveCfg = Release|Win32
+		{2E4167A4-14AE-4081-8EB8-68564E88A524}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7D42B838-E007-4665-87E1-8901FD5CD0C2}
+	EndGlobalSection
+EndGlobal
