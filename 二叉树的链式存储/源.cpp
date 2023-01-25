@@ -1,5 +1,136 @@
 #include <iostream>
 using namespace std;
+/*栈实现区域*/
+//链式栈中每个节点的定义
+template <typename T>
+struct StackNode
+{
+	T data;//数据域
+	StackNode<T>* next;//指向个下一个同类型的节点
+};
+//链式栈的定义
+template <typename T>
+class LinkStack
+{
+public:
+	LinkStack();//构造函数
+	~LinkStack();//析构函数
+	bool Push(const T& e);//入栈操作
+	bool Pop(T& e);//出栈操作
+	bool GetTop(T& e);//获取栈顶元素
+	void DisplayLinkStack();//扫描输出链式栈
+	bool Empty();//判断链式栈是否为空栈
+	int ListLength();//返回链式栈长度
+private:
+	int m_length;//栈长度
+	StackNode<T>* m_top;//栈顶地址(指针）
+};
+template <typename T>
+LinkStack<T>::LinkStack()
+{
+	int m_length = 0;//初始化栈的长度为0
+	m_top = nullptr;//栈顶指针为空指针
+}
+template <typename T>
+LinkStack<T>::~LinkStack()//析构函数
+{
+	T k;
+	while (m_length > 0)
+	{
+		Pop(k);//不断出栈直至链式栈的长度为零以完成析构
+	}
+}
+template <typename T>
+bool LinkStack<T>::Push(const T& e)
+{
+	if (m_length == 0)//如果是空栈
+	{
+		StackNode<T>* p = new StackNode<T>;//为栈顶元素分配内存
+		p->data = e;//给栈顶元素传数据
+		m_top = p;//将p的地址传给栈顶
+		m_top->next = nullptr;//将栈顶指针的next指向空指针
+		m_length++;//链式栈的长度增加
+		return true;
+	}
+	else
+	{
+		StackNode<T>* p = new StackNode<T>;//为栈顶元素分配内存
+		p->data = e;//给栈顶元素传数据
+		StackNode<T>* q = m_top;//获取原先栈顶元素的地址
+		m_top = p;//将p的地址传给栈顶
+		m_top->next = q;//将栈顶指针的next指向原先的栈顶
+		m_length++;//链式栈的长度增加
+		return true;
+	}
+}
+template <typename T>
+bool LinkStack<T>::Pop(T& e)
+{
+	if (m_length == 0)
+	{
+		cout << "该链式栈为空栈，无法出栈！" << endl;
+		return false;
+	}
+	else
+	{
+		e = m_top->data;//将栈顶的数据传给e
+		StackNode<T>* p = m_top;
+		m_top = m_top->next;//栈顶元素指向栈顶元素的下一位
+		delete p;//释放原先栈顶元素的空间
+		m_length--;//链式栈的长度减少
+		return true;
+	}
+}
+template <typename T>
+bool LinkStack<T>::GetTop(T& e)
+{
+	if (m_length == 0)
+	{
+		cout << "该链式栈为空栈，获取栈顶元素数据失败！" << endl;
+		return false;
+	}
+	else
+	{
+		e = m_top->data;//将栈顶的数据传给e
+		return true;
+	}
+}
+template <typename T>
+void LinkStack<T>::DisplayLinkStack()
+{
+	if (m_length == 0)
+	{
+		cout << "该链式栈为空栈！" << endl;
+	}
+	else
+	{
+		StackNode<T>* p = m_top;
+		for (int i = 0; i < m_length; i++)
+		{
+			cout << p->data << " ";//输出p的data
+			p = p->next;
+		}
+		cout << endl;//输出结束后换行
+	}
+}
+template <typename T>
+int LinkStack<T>::ListLength()
+{
+	return m_length;
+}
+template <typename T>
+bool LinkStack<T>::Empty()
+{
+	if (m_length == 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+/*队列实现区域*/
 //带头结点的实现方式
 //定义节点
 template <typename T>
@@ -161,7 +292,7 @@ void LinkQueue<T>::ClearQueue()
 	}//释放队列
 	delete m_head;//释放队首
 }
-enum ECCHILDSIGN//节点标记
+enum  ECCHILDSIGN//节点标记
 {
 	E_Root,//树根
 	E_ChildLeft,//左孩子
@@ -175,6 +306,13 @@ struct BinaryTreeNode
 	BinaryTreeNode* leftChild;//左孩子节点指针
 	BinaryTreeNode* rightChild;//右孩子节点指针
 	//BinaryTreeNode* parent;//父节点指针，根据需要可以引入
+};
+//为实现二叉树的非递归后序遍历引入新的类模板
+template <typename T>
+struct BTNode_extra
+{
+	BinaryTreeNode<T>* point;
+	int pointSign;
 };
 //二叉树的定义
 template <typename T>
@@ -193,6 +331,22 @@ public:
 	void inOrder();//中序遍历
 	void postOrder();//后序遍历
 	void levelOrder();//层序遍历
+	//求二叉树节点个数
+	int getSize();
+	//求二叉树高度
+	int getHeight();
+	//查找某个节点（假设二叉树的节点各不相同）
+	BinaryTreeNode<T>* SearchElem(const T& e);
+	//查找某个节点的父节点
+	BinaryTreeNode<T>* GetParent(BinaryTreeNode<T>* tSonNode);
+	//树的拷贝
+	void CopyTree(BinaryTree<T>* targettree);
+	//非递归方式前序遍历二叉树
+	void preOrder_noRecu();
+	//非递归方式中序遍历二叉树
+	void inOrder_noRecu();
+	//非递归方式后序遍历二叉树
+	void postOrder_noRecu();
 private:
 	BinaryTreeNode<T>* root;//树根节点的指针
 	//利用扩展二叉树的前序遍历序列创建二叉树的递归函数
@@ -201,6 +355,20 @@ private:
 	void inOrder(BinaryTreeNode<T>* tNode);//中序遍历
 	void postOrder(BinaryTreeNode<T>* tNode);//后序遍历
 	void levelOrder(BinaryTreeNode<T>* tNode);//层序遍历
+	//求二叉树节点个数
+	int getSize(BinaryTreeNode<T>* tNode);//也可以用遍历二叉树的方式求节点个数
+	//求二叉树高度
+	int getHeight(BinaryTreeNode<T>* tNode);
+	//查找某个节点（假设二叉树的节点各不相同）
+	BinaryTreeNode<T>* SearchElem(BinaryTreeNode<T>* tNode, const T& e);
+	//树的拷贝
+	void CopyTree(BinaryTreeNode<T>* tSouce, BinaryTreeNode<T>*& tTarget);//注意第二个参数类型引用
+	//非递归方式前序遍历二叉树
+	void preOrder_noRecu(BinaryTreeNode<T>* tNode);
+	//非递归方式中序遍历二叉树
+	void inOrder_noRecu(BinaryTreeNode<T>* tNode);
+	//非递归方式后序遍历二叉树
+	void postOrder_noRecu(BinaryTreeNode<T>* tNode);
 };
 //构造函数
 template<typename T>
@@ -353,6 +521,231 @@ void BinaryTree<T>::levelOrder(BinaryTreeNode<T>* tNode)
 		}//end while
 	}// end if
 }
+//求二叉树节点个数
+template <typename T>
+int BinaryTree<T>::getSize()
+{
+	return getSize(root);
+}
+//求二叉树节点个数
+template <typename T>
+int BinaryTree<T>::getSize(BinaryTreeNode<T>* tNode)
+{
+	if (tNode == nullptr)
+	{
+		return 0;
+	}
+	return getSize(tNode->leftChild) + getSize(tNode->rightChild) + 1;//左子树节点个数加上右子树节点个数再加上自身
+}
+//求二叉树高度
+template <typename T>
+int BinaryTree<T>::getHeight()
+{
+	return getHeight(root);
+}
+template <typename T>
+int BinaryTree<T>::getHeight(BinaryTreeNode<T>* tNode)
+{
+	if (tNode == nullptr)
+	{
+		return 0;
+	}
+	int lheight = getHeight(tNode->leftChild);//左子树高度
+	int rheight = getHeight(tNode->rightChild);//右子树高度
+	if (lheight > rheight)
+	{
+		return lheight + 1;
+	}
+	return rheight + 1;
+}
+//查找某个节点（假设二叉树的节点各不相同）
+template <typename T>
+BinaryTreeNode<T>* BinaryTree<T>::SearchElem(const T& e)
+{
+	return SearchElem(root, e);
+}
+template <typename T>
+BinaryTreeNode<T>* BinaryTree<T>::SearchElem(BinaryTreeNode<T>* tNode, const T& e)
+{
+
+	if (tNode != nullptr)//若二叉树非空
+	{
+		BinaryTreeNode<T>* tmpnode;
+		LinkQueue<BinaryTreeNode<T>* > lnobj;//注意队列元素类型是节点指针类型
+		lnobj.EnQueue(tNode);//先把根节点指针入队
+		while (!lnobj.Empty())//循环判断队列是否为空
+		{
+			lnobj.DeQueue(tmpnode);//出队列
+			if (tmpnode->data == e)
+			{
+				return tmpnode;
+			}
+			if (tmpnode->leftChild != nullptr)
+			{
+				lnobj.EnQueue(tmpnode->leftChild);//左孩子入队
+			}
+			if (tmpnode->rightChild != nullptr)
+			{
+				lnobj.EnQueue(tmpnode->rightChild);//右孩子入队
+			}
+		}//end while
+		return nullptr;
+	}// end if
+}
+//查找某个节点的父节点
+template <typename T>
+BinaryTreeNode<T>* BinaryTree<T>::GetParent(BinaryTreeNode<T>* tSonNode)
+{
+	if (tSonNode == nullptr)
+	{
+		return nullptr;
+	}
+	BinaryTreeNode<T>* tmpnode;
+	LinkQueue<BinaryTreeNode<T>* > lnobj;//注意队列元素类型是节点指针类型
+	lnobj.EnQueue(root);//先把根节点指针入队
+	while (!lnobj.Empty())//循环判断队列是否为空
+	{
+		lnobj.DeQueue(tmpnode);//出队列
+		if (tmpnode->leftChild == tSonNode|| tmpnode->rightChild == tSonNode)
+		{
+			return tmpnode;
+		}
+		if (tmpnode->leftChild != nullptr)
+		{
+			lnobj.EnQueue(tmpnode->leftChild);//左孩子入队
+		}
+		if (tmpnode->rightChild != nullptr)
+		{
+			lnobj.EnQueue(tmpnode->rightChild);//右孩子入队
+		}
+	}//end while
+	return nullptr;
+}
+//树的拷贝
+template <typename T>
+void BinaryTree<T>::CopyTree(BinaryTree<T>* targetTree)
+{
+	CopyTree(root, targetTree->root);
+}
+template <typename T>
+void BinaryTree<T>::CopyTree(BinaryTreeNode<T>* tSouce, BinaryTreeNode<T>*& tTarget)//注意第二个参数类型引用
+{
+	if (tSouce == nullptr)
+	{
+		tTarget = nullptr;
+	}
+	else
+	{
+		tTarget = new BinaryTreeNode<T>;
+		tTarget->data = tSouce->data;
+		CopyTree(tSouce->leftChild, tTarget->leftChild);//对左子树拷贝
+		CopyTree(tSouce->rightChild, tTarget->rightChild);//对右子树拷贝
+	}
+}
+//非递归方式实现前序遍历
+template <typename T>
+void BinaryTree<T>::preOrder_noRecu()
+{
+	preOrder_noRecu(root);
+}
+template <typename T>
+void BinaryTree<T>::preOrder_noRecu(BinaryTreeNode<T>* tNode)
+{
+	if (tNode == nullptr)
+	{
+		return;
+	}
+	LinkStack<BinaryTreeNode<T>*> obj;
+	BinaryTreeNode<T>* k;
+	obj.Push(tNode);//根节点入栈
+	while (!obj.Empty())//如果栈不为空则循环下面的步骤，直至栈为空
+	{
+		obj.Pop(k);//栈顶元素出栈
+		cout << k->data << " ";//并访问（显示节点值）这个元素
+		if (k->rightChild != nullptr)//如果这个被访问的元素右子节点不为空，则把其右子节点入栈
+		{
+			obj.Push(k->rightChild);
+		}
+		if (k->leftChild != nullptr)//如果这个被访问的元素左子节点不为空，则把其左子节点入栈
+		{
+			obj.Push(k->leftChild);
+		}
+	}//end while
+} 
+//非递归方式实现中序遍历
+template <typename T>
+void BinaryTree<T>::inOrder_noRecu()
+{
+	inOrder_noRecu(root);
+}
+template <typename T>
+void BinaryTree<T>::inOrder_noRecu(BinaryTreeNode<T>* tNode)
+{
+	if (tNode == nullptr)
+	{
+		return;
+	}
+	LinkStack<BinaryTreeNode<T>*> obj;
+	BinaryTreeNode<T>* k;
+	obj.Push(tNode);//根节点入栈
+	while (!obj.Empty())//如果栈不为空则循环下面的步骤，直至栈为空
+	{
+		while (tNode->leftChild != nullptr)
+		{
+			obj.Push(tNode->leftChild);//将当前节点的左子节点入栈
+			tNode = tNode->leftChild;//将当前节点的左子节点重新标记为当前节点；
+		}
+		obj.Pop(k);//栈顶元素出栈
+		cout << k->data << " ";//访问栈顶元素
+		if(k->rightChild != nullptr)//如果当前节点的右子节点不为空，则把自己的右节点设定为当前节点，并且入栈；
+		{
+			tNode = k->rightChild;//将刚刚出栈的元素的右节点标记为当前节点
+			obj.Push(tNode);//将当前节点入栈
+		}
+	}
+}
+//非递归方式实现中序遍历
+template <typename T>
+void BinaryTree<T>::postOrder_noRecu()
+{
+	postOrder_noRecu(root);
+}
+template <typename T>
+void BinaryTree<T>::postOrder_noRecu(BinaryTreeNode<T>* tNode)
+{
+	if (tNode == nullptr)
+	{
+		return;
+	}
+	LinkStack< BTNode_extra<T> > obj;
+	BTNode_extra<T> ext_tmpnode;
+	do 
+	{
+		while (tNode != nullptr)
+		{
+			ext_tmpnode.point = tNode;
+			ext_tmpnode.pointSign = 1;//标记先处理该节点的左孩子
+			obj.Push(ext_tmpnode);
+			tNode = tNode->leftChild;
+		}//循环2
+		while (!obj.Empty())
+		{
+			obj.Pop(ext_tmpnode);//出栈
+			if (ext_tmpnode.pointSign == 1)
+			{
+				ext_tmpnode.pointSign = 0;//标记该节点为右孩子
+				obj.Push(ext_tmpnode);//重新入栈
+				tNode = ext_tmpnode.point->rightChild;
+				break;//终止while循环
+			}
+			else
+			{
+				cout << ext_tmpnode.point->data << " ";
+			}
+
+		}//循环3
+	} while (!obj.Empty());//循环1
+}
 int main()
 {
 	BinaryTree<int> mytree;//创建二叉树
@@ -375,5 +768,137 @@ int main()
 	cout << "层序遍历序列为：";
 	mytree2.levelOrder();
 	cout << endl;
+	cout << "二叉树的节点个数为：" << mytree2.getSize() << endl;
+	cout << "二叉树的高度为：" << mytree2.getHeight() << endl;
+	//查找某节点
+	char val = 'E';
+	BinaryTreeNode<char>* p = mytree2.SearchElem(val);
+	if (p != nullptr)
+	{
+		cout << "找到了值为" << val << "的节点！" << endl;
+	}
+	else
+	{
+		cout << "没有找到值为" << val << "的节点！" << endl;
+	}
+	BinaryTreeNode<char>* parp = mytree2.GetParent(p);
+	if (parp != nullptr)
+	{
+		cout << "找到了值为" << val << "的节点的父节点！" << parp->data << endl;
+	}
+	else
+	{
+		cout << "没有找到值为" << val << "的节点！" << endl;
+	}
+	char val1 = 'A';
+	p = mytree2.SearchElem(val1);
+	if (p != nullptr)
+	{
+		cout << "找到了值为" << val1 << "的节点！" << endl;
+	}
+	else
+	{
+		cout << "没有找到值为" << val1 << "的节点！" << endl;
+	}
+	parp = mytree2.GetParent(p);
+	if (parp != nullptr)
+	{
+		cout << "找到了值为" << val1 << "的节点的父节点！" << parp->data << endl;
+	}
+	else
+	{
+		cout << "没有找到值为" << val1 << "的节点的父节点！" << endl;
+	}
+	char val2 = 'B';
+	p = mytree2.SearchElem(val2);
+	if (p != nullptr)
+	{
+		cout << "找到了值为" << val2 << "的节点！" << endl;
+	}
+	else
+	{
+		cout << "没有找到值为" << val2 << "的节点！" << endl;
+	}
+	parp = mytree2.GetParent(p);
+	if (parp != nullptr)
+	{
+		cout << "找到了值为" << val2 << "的节点的父节点！" << parp->data << endl;
+	}
+	else
+	{
+		cout << "没有找到值为" << val2 << "的节点的父节点！" << endl;
+	}
+	char val3 = 'C';
+	p = mytree2.SearchElem(val3);
+	if (p != nullptr)
+	{
+		cout << "找到了值为" << val3 << "的节点！" << endl;
+	}
+	else
+	{
+		cout << "没有找到值为" << val3 << "的节点！" << endl;
+	}
+	parp = mytree2.GetParent(p);
+	if (parp != nullptr)
+	{
+		cout << "找到了值为" << val3 << "的节点的父节点！" << parp->data << endl;
+	}
+	else
+	{
+		cout << "没有找到值为" << val3 << "的节点的父节点！" << endl;
+	}
+	char val4 = 'D';
+	p = mytree2.SearchElem(val4);
+	if (p != nullptr)
+	{
+		cout << "找到了值为" << val4 << "的节点！" << endl;
+	}
+	else
+	{
+		cout << "没有找到值为" << val4 << "的节点！" << endl;
+	}
+	parp = mytree2.GetParent(p);
+	if (parp != nullptr)
+	{
+		cout << "找到了值为" << val4 << "的节点的父节点！" << parp->data << endl;
+	}
+	else
+	{
+		cout << "没有找到值为" << val4 << "的节点的父节点！" << endl;
+	}
+	char val5 = 'K';
+	p = mytree2.SearchElem(val5);
+	if (p != nullptr)
+	{
+		cout << "找到了值为" << val5 << "的节点！" << endl;
+	}
+	else
+	{
+		cout << "没有找到值为" << val5 << "的节点！" << endl;
+	}
+	parp = mytree2.GetParent(p);
+	if (parp != nullptr)
+	{
+		cout << "找到了值为" << val5 << "的节点的父节点！" << parp->data << endl;
+	}
+	else
+	{
+		cout << "没有找到值为" << val5 << "的节点的父节点！" << endl;
+	}
+	//测试树的拷贝
+	cout << "---------测试树的拷贝----------" << endl;
+	BinaryTree<char> mytree3;
+	mytree2.CopyTree(&mytree3);
+	mytree3.levelOrder();
+	cout << endl;
+	//测试非递归前序遍历
+	cout << "---------测试非递归前序遍历----------" << endl;
+	mytree2.preOrder_noRecu();
+	cout << endl;
+	cout << "---------测试非递归中序遍历----------" << endl;
+	mytree2.inOrder_noRecu();
+	cout << endl;
+	cout << "---------测试非递归后序遍历----------" << endl;
+	mytree2.postOrder_noRecu();
 	return 0;
 }
