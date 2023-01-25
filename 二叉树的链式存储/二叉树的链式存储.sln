@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "二叉树的链式存储", "二叉树的链式存储.vcxproj", "{52FFB25B-2EB7-4A5F-B21E-4AFFEDD4CDFE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{52FFB25B-2EB7-4A5F-B21E-4AFFEDD4CDFE}.Debug|x64.ActiveCfg = Debug|x64
+		{52FFB25B-2EB7-4A5F-B21E-4AFFEDD4CDFE}.Debug|x64.Build.0 = Debug|x64
+		{52FFB25B-2EB7-4A5F-B21E-4AFFEDD4CDFE}.Debug|x86.ActiveCfg = Debug|Win32
+		{52FFB25B-2EB7-4A5F-B21E-4AFFEDD4CDFE}.Debug|x86.Build.0 = Debug|Win32
+		{52FFB25B-2EB7-4A5F-B21E-4AFFEDD4CDFE}.Release|x64.ActiveCfg = Release|x64
+		{52FFB25B-2EB7-4A5F-B21E-4AFFEDD4CDFE}.Release|x64.Build.0 = Release|x64
+		{52FFB25B-2EB7-4A5F-B21E-4AFFEDD4CDFE}.Release|x86.ActiveCfg = Release|Win32
+		{52FFB25B-2EB7-4A5F-B21E-4AFFEDD4CDFE}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A19F314A-B41F-4CC2-98F7-4E9EEFF9A03F}
+	EndGlobalSection
+EndGlobal
