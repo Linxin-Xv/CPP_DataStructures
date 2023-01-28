@@ -347,6 +347,10 @@ public:
 	void inOrder_noRecu();
 	//非递归方式后序遍历二叉树
 	void postOrder_noRecu();
+	//根据前序和中序遍历序列来创建二叉树
+	void CreateBTreeAccordPI(char *pP_T,char *pI_T);
+	//根据后序和中序遍历序列来创建二叉树
+	void CreateBTreeAccordPO(char* pP_T, char* pI_T);
 private:
 	BinaryTreeNode<T>* root;//树根节点的指针
 	//利用扩展二叉树的前序遍历序列创建二叉树的递归函数
@@ -369,6 +373,10 @@ private:
 	void inOrder_noRecu(BinaryTreeNode<T>* tNode);
 	//非递归方式后序遍历二叉树
 	void postOrder_noRecu(BinaryTreeNode<T>* tNode);
+	//根据前序和中序遍历序列来创建二叉树
+	void CreateBTreeAccordPI(BinaryTreeNode<T>* &tNode, char* pP_T, char* pI_T, int n);
+	//根据后序和中序遍历序列来创建二叉树
+	void CreateBTreeAccordPO(BinaryTreeNode<T>*& tNode, char* pP_T, char* pI_T, int n);
 };
 //构造函数
 template<typename T>
@@ -746,6 +754,82 @@ void BinaryTree<T>::postOrder_noRecu(BinaryTreeNode<T>* tNode)
 		}//循环3
 	} while (!obj.Empty());//循环1
 }
+template <typename T>
+void BinaryTree<T>::CreateBTreeAccordPI(char *pP_T,char *pI_T)
+{
+	CreateBTreeAccordPI(root, pP_T, pI_T, strlen(pP_T));
+}
+template <typename T>
+void BinaryTree<T>::CreateBTreeAccordPI(BinaryTreeNode<T>* &tNode,char* pP_T, char* pI_T, int n)
+{
+	if (n == 0)
+	{
+		tNode = nullptr;
+	}
+	else
+	{
+		//(1)在中序遍历序列中找根前序遍历中根是在最前面的。
+		int tmpindex = 0;
+		while (pP_T[0] != pI_T[tmpindex])
+		{
+			tmpindex++;
+		}
+		tNode = new BinaryTreeNode<T>;//创建根节点
+		tNode->data = pI_T[tmpindex];
+		//（2）创建左孩子
+		CreateBTreeAccordPI(
+			tNode->leftChild,//创建左孩子
+			pP_T + 1,//找到前序遍历序列中左树开始节点的位置，这里跳过了根节点
+			pI_T,//找到中序遍历序列中左树开始节点的位置
+			tmpindex //左孩子的节点个数
+		);
+		//(3)创建右孩子
+		CreateBTreeAccordPI(
+			tNode->rightChild,//创建右孩子
+			pP_T + tmpindex + 1,//找到前序遍历序列中右树开始节点的位置，这里跳过了根节点
+			pI_T + tmpindex + 1,//找到中序遍历序列中右树开始节点的位置
+			n - tmpindex - 1 //左孩子的节点个数
+		);
+	}
+}
+//通过中序遍历序列和后序遍历序列来还原二叉树
+template <typename T>
+void BinaryTree<T>::CreateBTreeAccordPO(char* pI_T, char* pPost_T)
+{
+	CreateBTreeAccordPO(root, pI_T, pPost_T, strlen(pPost_T));
+}
+template <typename T>
+void BinaryTree<T>::CreateBTreeAccordPO(BinaryTreeNode<T>*& tNode, char* pI_T, char* pPost_T, int n)
+{
+	if (n == 0)
+	{
+		tNode = nullptr;
+	}
+	else
+	{
+		int tmpindex = 0;//下标
+		while (pPost_T[n - 1] != pI_T[tmpindex])
+		{
+			tmpindex++;
+		}//找到中序遍历中的树根
+		tNode = new BinaryTreeNode<T>;//创建新节点
+		tNode->data = pI_T[tmpindex];
+		//创建左孩子
+		CreateBTreeAccordPO(
+			tNode->leftChild,//创建左孩子
+		    pI_T,//中序遍历序列
+			pPost_T,//后序遍历序列
+			tmpindex//左孩子节点数量
+		);
+		//创建右孩子
+		CreateBTreeAccordPO(
+			tNode->rightChild,//创建右孩子
+			pI_T+tmpindex+1,//找到中序遍历序列右树开始节点位置
+			pPost_T+tmpindex,//找到后序遍历序列右树开始节点位置
+			n-tmpindex-1//右孩子节点数量
+		);
+	}
+}
 int main()
 {
 	BinaryTree<int> mytree;//创建二叉树
@@ -900,5 +984,27 @@ int main()
 	cout << endl;
 	cout << "---------测试非递归后序遍历----------" << endl;
 	mytree2.postOrder_noRecu();
+	cout << endl;
+	BinaryTree<char> mytree4;//创建二叉树
+	mytree4.CreateBTreeAccordPI((char*)"ABDCE", (char*)"DBACE");
+	cout << "---------测试非递归前序遍历新二叉树1----------" << endl;
+	mytree4.preOrder_noRecu();
+	cout << endl;
+	cout << "---------测试非递归中序遍历新二叉树1----------" << endl;
+	mytree4.inOrder_noRecu();
+	cout << endl;
+	cout << "---------测试非递归后序遍历新二叉树1----------" << endl;
+	mytree4.postOrder_noRecu();
+	cout << endl;
+	BinaryTree<char> mytree5;//创建二叉树
+	mytree5.CreateBTreeAccordPO((char*)"DBACE", (char*)"DBECA");
+	cout << "---------测试非递归前序遍历新二叉树2----------" << endl;
+	mytree5.preOrder_noRecu();
+	cout << endl;
+	cout << "---------测试非递归中序遍历新二叉树2----------" << endl;
+	mytree5.inOrder_noRecu();
+	cout << endl;
+	cout << "---------测试非递归后序遍历新二叉树2----------" << endl;
+	mytree5.postOrder_noRecu();
 	return 0;
 }
